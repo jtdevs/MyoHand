@@ -36,34 +36,25 @@ obscene = (m_pulgar, m_indice, M_medio, m_anular, m_menique)
 pwm=PWM(0x40)
 pwm.setPWMFreq(50)
 
-print('Start Myo demo for Linux')
-listener = PrintPoseListener()
-myo = Myo()
-myo.connect()
-myo.add_listener(listener)
-myo.vibrate(VibrationType.SHORT)
-while True:
-    myo.run()
-
 class PrintPoseListener(DeviceListener):
     def on_pose(self, pose):
         pose_type = PoseType(pose)
         print pose_type.name
-	
+    
         if(pose_type.name=="FIST"):
-    		self.Fist()
-    	
+            self.Fist()
+        
         if(pose_type.name=="REST"):
-    		self.Spread()
-    	
+            self.Spread()
+        
         if(pose_type.name=="WAVE_OUT"):
             self.Point()
 
         if(pose_type.name=="WAVE_IN"):
             self.Rock()
 
-    	if(pose_type.name=="DOUBLE_TAP"):
-    		self.Obscene()
+        if(pose_type.name=="DOUBLE_TAP"):
+            self.Obscene()
 
     def Fist(self):
         global fist
@@ -120,4 +111,13 @@ class PrintPoseListener(DeviceListener):
 
     def Out(self):
         Myo().safely_disconnect()
-	sys.exit()
+    sys.exit()
+
+print('Start Myo demo for Linux')
+listener = PrintPoseListener()
+myo = Myo()
+myo.connect()
+myo.add_listener(listener)
+myo.vibrate(VibrationType.SHORT)
+while True:
+    myo.run()
