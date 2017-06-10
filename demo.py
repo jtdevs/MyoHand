@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 import sys
+import signal
+from PyQt4 import QtCore, QtGui
 from Adafruit_PWM_Servo_Driver import PWM
 import time
 
@@ -35,6 +37,11 @@ obscene = (m_pulgar, m_indice, M_medio, m_anular, m_menique)
 
 pwm=PWM(0x40)
 pwm.setPWMFreq(50)
+
+def signal_handler(signal, frame):
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 class PrintPoseListener(DeviceListener):
     def on_pose(self, pose):
@@ -111,13 +118,47 @@ class PrintPoseListener(DeviceListener):
 
     def Out(self):
         Myo().safely_disconnect()
-    sys.exit()
+    sys.exit() 
 
-print('Start Myo demo for Linux')
-listener = PrintPoseListener()
-myo = Myo()
-myo.connect()
-myo.add_listener(listener)
-myo.vibrate(VibrationType.SHORT)
-while True:
-    myo.run()
+
+
+
+class Ui_Myo_Window(QtGui.QWidget):
+
+    def setupMyo_Window(self, Myo_Window):
+        self.start_myo
+
+        
+
+    def start_myo(self):
+
+        print('Start Myo for Linux')
+        listener = PrintPoseListener()
+        myo = Myo()
+
+        try:
+            myo.connect()
+            myo.add_listener(listener)
+            myo.vibrate(VibrationType.SHORT)
+            while True:
+                myo.run()
+
+
+        except KeyboardInterrupt:
+            pass
+        except ValueError as ex:
+            print(ex)
+        finally:
+            myo.safely_disconnect()
+            print('Finished.')
+
+
+
+
+if __name__ == '__main__':          
+
+    app = QtGui.QApplication(sys.argv)
+    Myo_Window = QtGui.QWidget()
+    window = Ui_Myo_Window()
+    window.setupMyo_Window(Myo_Window)
+    sys.exit(app.exec_())
