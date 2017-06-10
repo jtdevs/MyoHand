@@ -131,14 +131,8 @@ class Ui_Myo_Window(QtGui.QWidget):
         Myo_Window.resize(320, 220)
 
         self.gridLayout = QtGui.QGridLayout(Myo_Window)
-
-        btn = QtGui.QPushButton("Connect", self)
-        btn.clicked.connect(self.start_myo)
+        self.start_myo()
         
-        
-           
-        
-        self.gridLayout.addWidget(btn, 1, 0, 1, 1)
 
     def Activate_Hand(self,state):
         if state == QtCore.Qt.Checked:
@@ -183,4 +177,5 @@ if __name__ == '__main__':
     Myo_Window = QtGui.QWidget()
     window = Ui_Myo_Window()
     window.setupMyo_Window(Myo_Window)
+    Myo_Window.show()
     sys.exit(app.exec_())
